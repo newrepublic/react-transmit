@@ -92,6 +92,22 @@ module.exports = function (Component, options) {
 				this.props.onQuery.call(this, promiseProxy.Promise.resolve({}));
 			}
 		},
+
+    componentDidMount: function () {
+			// Keep track of the mounted state manually, because the official isMounted() method
+			// returns true when using renderToString() from react-dom/server.
+			this._mounted = true;
+		},
+
+		componentWillUnmount: function () {
+			this._mounted = false;
+		},
+
+		_isMounted: function () {
+			// See the official `isMounted` discussion at https://github.com/facebook/react/issues/2787
+			return !!this._mounted;
+		},
+
 		setQueryParams: function (nextParams, optionalQueryNames) {
 			var _this = this;
 
@@ -104,7 +120,7 @@ module.exports = function (Component, options) {
 
 				promise.then(function (queryResults) {
 					// See `isMounted` discussion at https://github.com/facebook/react/issues/2787
-					if (!_this.isMounted()) {
+					if (!_this._isMounted()) {
 						return queryResults;
 					}
 
