@@ -22,7 +22,7 @@
     "watch": "concurrent --kill-others 'npm run watch-client' 'npm run localhost'"
   },
   "dependencies": {
-    "react": "15.6",
+    "react": ">= 15.6",
     "prop-types": "15.6",
     "create-react-class": "15.6",
     "ascii-json": "0.2.0"
