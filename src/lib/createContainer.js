@@ -5,7 +5,6 @@
 
 var promiseProxy = require("./promiseProxy");
 var React        = require("./react");
-var assign       = React.__spread;
 var PropTypes = require("prop-types")
 var createReactClass = require('create-react-class');
 
@@ -13,7 +12,6 @@ var createReactClass = require('create-react-class');
  * @function createContainer
  */
 module.exports = function (Component, options) {
-	console.log("👾 local react transmit")
 	options = arguments[1] || {};
 
 	var Container = createReactClass({
@@ -35,7 +33,7 @@ module.exports = function (Component, options) {
 				}
 
 				queryParams = queryParams || {};
-				assign(queryParams, Container.queryParams, assign({}, queryParams));
+				Object.assign(queryParams, Container.queryParams, Object.assign({}, queryParams));
 
 				return Container.queries[queryName](queryParams);
 			},
@@ -75,7 +73,7 @@ module.exports = function (Component, options) {
 
 					promisedQueries.forEach(function (promisedQuery) {
 						if (typeof promisedQuery === "object") {
-							assign(queryResults, promisedQuery);
+							Object.assign(queryResults, promisedQuery);
 						}
 					});
 
@@ -86,7 +84,7 @@ module.exports = function (Component, options) {
 		componentWillMount: function () {
 			var externalQueryParams = this.props && this.props.queryParams || {};
 
-			this.currentParams = assign({}, Container.queryParams, externalQueryParams);
+			this.currentParams = Object.assign({}, Container.queryParams, externalQueryParams);
 
 			if (!this.hasQueryResults()) {
 				this.setQueryParams({});
@@ -118,7 +116,7 @@ module.exports = function (Component, options) {
 				var props = _this.props || {};
 				var promise;
 
-				assign(_this.currentParams, nextParams);
+				Object.assign(_this.currentParams, nextParams);
 				promise = Container.getAllQueries(_this.currentParams, optionalQueryNames);
 
 				promise.then(function (queryResults) {
@@ -193,7 +191,7 @@ module.exports = function (Component, options) {
 
 			return React.createElement(
 				Component,
-				assign({}, props, state, utilProps)
+				Object.assign({}, props, state, utilProps)
 			);
 		}
 	});
