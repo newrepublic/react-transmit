@@ -6,6 +6,7 @@
 var promiseProxy = require("./promiseProxy");
 var React        = require("./react");
 var assign       = React.__spread;
+var PropTypes = require("prop-types")
 
 /**
  * @function createContainer
@@ -16,11 +17,11 @@ module.exports = function (Component, options) {
 	var Container = React.createClass({
 		displayName: (Component.displayName || Component.name) + "Container",
 		propTypes: {
-			queryParams: React.PropTypes.object,
-			onQuery:     React.PropTypes.func,
-			emptyView:   React.PropTypes.oneOfType([
-				React.PropTypes.element,
-				React.PropTypes.func
+			queryParams: PropTypes.object,
+			onQuery:     PropTypes.func,
+			emptyView:   PropTypes.oneOfType([
+				PropTypes.element,
+				PropTypes.func
 	        ])
 		},
 		statics: {
