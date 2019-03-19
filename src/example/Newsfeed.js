@@ -2,11 +2,12 @@ import React from "react";
 import InlineCss from "react-inline-css";
 import Transmit from "lib/react-transmit";
 import Story from "example/Story";
+import createReactClass from "create-react-class"
 
 /**
  * @class Newsfeed
  */
-const Newsfeed = React.createClass({
+const Newsfeed = createReactClass({
 	render () {
 		/**
 		 * Transmitted prop is guaranteed.

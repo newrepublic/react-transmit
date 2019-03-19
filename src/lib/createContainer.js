@@ -7,14 +7,16 @@ var promiseProxy = require("./promiseProxy");
 var React        = require("./react");
 var assign       = React.__spread;
 var PropTypes = require("prop-types")
+var createReactClass = require('create-react-class');
 
 /**
  * @function createContainer
  */
 module.exports = function (Component, options) {
+	console.log("👾 local react transmit")
 	options = arguments[1] || {};
 
-	var Container = React.createClass({
+	var Container = createReactClass({
 		displayName: (Component.displayName || Component.name) + "Container",
 		propTypes: {
 			queryParams: PropTypes.object,
