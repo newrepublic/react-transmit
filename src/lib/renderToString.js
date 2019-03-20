@@ -5,6 +5,7 @@
 
 var promiseProxy = require("./promiseProxy");
 var React        = require("./react");
+var ReactDOMServer = require('react-dom/server');
 
 /**
  * @function renderToString
@@ -16,7 +17,7 @@ module.exports = function (Component, props) {
 		var onQuery = function (promise) {
 			promise.then(function (queryResults) {
 				var myProps     = Object.assign({}, props, queryResults);
-				var reactString = React.renderToString(React.createElement(Component, myProps));
+				var reactString = ReactDOMServer.renderToString(React.createElement(Component, myProps))
 
 				resolve({
 					reactString: reactString,
@@ -28,6 +29,6 @@ module.exports = function (Component, props) {
 		};
 
 		var myProps = Object.assign({}, props, {onQuery: onQuery});
-		React.renderToString(React.createElement(Component, myProps));
+		ReactDOMServer.renderToString(React.createElement(Component, myProps));
 	});
 };
