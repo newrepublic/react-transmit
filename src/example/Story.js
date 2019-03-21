@@ -3,11 +3,12 @@ import React from "react";
 import InlineCss from "react-inline-css";
 import Transmit from "lib/react-transmit";
 import Like from "example/Like";
+import createReactClass from "create-react-class"
 
 /**
  * @class Story
  */
-const Story = React.createClass({
+const Story = createReactClass({
 	render () {
 		/**
 		 * Transmitted prop is guaranteed.

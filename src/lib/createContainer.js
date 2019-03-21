@@ -5,7 +5,8 @@
 
 var promiseProxy = require("./promiseProxy");
 var React        = require("./react");
-var assign       = React.__spread;
+var PropTypes = require("prop-types")
+var createReactClass = require('create-react-class');
 
 /**
  * @function createContainer
@@ -13,14 +14,14 @@ var assign       = React.__spread;
 module.exports = function (Component, options) {
 	options = arguments[1] || {};
 
-	var Container = React.createClass({
+	var Container = createReactClass({
 		displayName: (Component.displayName || Component.name) + "Container",
 		propTypes: {
-			queryParams: React.PropTypes.object,
-			onQuery:     React.PropTypes.func,
-			emptyView:   React.PropTypes.oneOfType([
-				React.PropTypes.element,
-				React.PropTypes.func
+			queryParams: PropTypes.object,
+			onQuery:     PropTypes.func,
+			emptyView:   PropTypes.oneOfType([
+				PropTypes.element,
+				PropTypes.func
 	        ])
 		},
 		statics: {
@@ -32,7 +33,7 @@ module.exports = function (Component, options) {
 				}
 
 				queryParams = queryParams || {};
-				assign(queryParams, Container.queryParams, assign({}, queryParams));
+				Object.assign(queryParams, Container.queryParams, Object.assign({}, queryParams));
 
 				return Container.queries[queryName](queryParams);
 			},
@@ -72,7 +73,7 @@ module.exports = function (Component, options) {
 
 					promisedQueries.forEach(function (promisedQuery) {
 						if (typeof promisedQuery === "object") {
-							assign(queryResults, promisedQuery);
+							Object.assign(queryResults, promisedQuery);
 						}
 					});
 
@@ -83,7 +84,7 @@ module.exports = function (Component, options) {
 		componentWillMount: function () {
 			var externalQueryParams = this.props && this.props.queryParams || {};
 
-			this.currentParams = assign({}, Container.queryParams, externalQueryParams);
+			this.currentParams = Object.assign({}, Container.queryParams, externalQueryParams);
 
 			if (!this.hasQueryResults()) {
 				this.setQueryParams({});
@@ -115,7 +116,7 @@ module.exports = function (Component, options) {
 				var props = _this.props || {};
 				var promise;
 
-				assign(_this.currentParams, nextParams);
+				Object.assign(_this.currentParams, nextParams);
 				promise = Container.getAllQueries(_this.currentParams, optionalQueryNames);
 
 				promise.then(function (queryResults) {
@@ -190,7 +191,7 @@ module.exports = function (Component, options) {
 
 			return React.createElement(
 				Component,
-				assign({}, props, state, utilProps)
+				Object.assign({}, props, state, utilProps)
 			);
 		}
 	});
