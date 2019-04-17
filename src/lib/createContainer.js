@@ -8,6 +8,24 @@ var React        = require("./react");
 var PropTypes = require("prop-types")
 var createReactClass = require('create-react-class');
 
+function isRootContainer(Container) {
+	return !!Container.isRootContainer;
+};
+
+function shallowEqual(a, b) {
+	var ka = 0;
+	var kb = 0;
+	for (let key in a) {
+		if (a.hasOwnProperty(key) && a[key] !== b[key])
+			return false;
+    		ka++;
+  	}
+  	for (let key in b)
+  		if (b.hasOwnProperty(key))
+      			kb++;
+  	return ka === kb;
+}
+
 /**
  * @function createContainer
  */
@@ -25,6 +43,7 @@ module.exports = function (Component, options) {
 	        ])
 		},
 		statics: {
+			isRootContainer: !!options.initialVariables,
 			queryParams: options.queryParams || {},
 			queries:     options.queries || {},
 			getQuery:    function (queryName, queryParams) {
@@ -93,7 +112,38 @@ module.exports = function (Component, options) {
 				this.props.onQuery.call(this, promiseProxy.Promise.resolve({}));
 			}
 		},
+		clearState: function() {
+			var newState = {}
+			for (var queryName in Container.queries) {
+				newState[queryName] = null
+			}
+			this.setState(newState)
+		},
+		componentDidUpdate: function(prevProps) {
+			/**
+			 * This implementation is adapted from:
+			 * https://github.com/RickWong/react-transmit/issues/31
+			 */
+			var needToLoad = !shallowEqual(
+				prevProps.queryParams,
+				this.props.queryParams
+			);
+			if (isRootContainer(Container) && needToLoad) {
+				/**
+				 * Clear existing data so that we get a "fresh screen"
+				 * and all the child components get re-mounted.
+				 */
+				this.clearState()
 
+				/**
+				 * Load data from scratch.
+				 */
+				var externalQueryParams = this.props && this.props.queryParams || {};
+
+				this.currentParams = Object.assign({}, Container.queryParams, externalQueryParams);
+				this.setQueryParams({});
+			}
+		},
     componentDidMount: function () {
 			// Keep track of the mounted state manually, because the official isMounted() method
 			// returns true when using renderToString() from react-dom/server.
