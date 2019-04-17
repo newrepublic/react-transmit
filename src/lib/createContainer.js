@@ -112,13 +112,6 @@ module.exports = function (Component, options) {
 				this.props.onQuery.call(this, promiseProxy.Promise.resolve({}));
 			}
 		},
-		clearState: function() {
-			var newState = {}
-			for (var queryName in Container.queries) {
-				newState[queryName] = null
-			}
-			this.setState(newState)
-		},
 		componentDidUpdate: function(prevProps) {
 			/**
 			 * This implementation is adapted from:
@@ -133,8 +126,7 @@ module.exports = function (Component, options) {
 				 * Clear existing data so that we get a "fresh screen"
 				 * and all the child components get re-mounted.
 				 */
-				this.clearState()
-
+				this.setState({loading: true})
 				/**
 				 * Load data from scratch.
 				 */
@@ -176,7 +168,7 @@ module.exports = function (Component, options) {
 					}
 
 					try {
-						_this.setState(queryResults);
+						_this.setState(Object.assign({}, queryResults, {loading: false}));
 					}
 					catch (error) {
 						// Call to setState may fail if renderToString() was used.
@@ -233,7 +225,7 @@ module.exports = function (Component, options) {
 			};
 
 			// Query results must be guaranteed to render.
-			if (!this.hasQueryResults()) {
+			if (!this.hasQueryResults() || state.loading) {
 				return (typeof props.emptyView === "function") ?
 				       props.emptyView() :
 				       props.emptyView || null;
