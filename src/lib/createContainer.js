@@ -15,13 +15,13 @@ function isRootContainer(Container) {
 function shallowEqual(a, b) {
 	var ka = 0;
 	var kb = 0;
-	for (let key in a) {
+	for (var key in a) {
 		if (a.hasOwnProperty(key) && a[key] !== b[key])
 			return false;
     		ka++;
   	}
-  	for (let key in b)
-  		if (b.hasOwnProperty(key))
+  	for (var keyb in b)
+  		if (b.hasOwnProperty(keyb))
       			kb++;
   	return ka === kb;
 }
